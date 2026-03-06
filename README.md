@@ -1,186 +1,174 @@
 # RAG Pipeline Development Task
 
-## Overview
+## Time Limit: 90 Minutes
 
-Build a Retrieval-Augmented Generation (RAG) pipeline that can answer questions about BrewGenius coffee/espresso machine products using the provided product knowledge base.
+## Tools Allowed
 
----
+You may use:
+- **Internet** for research
+- **AI tools** (ChatGPT, Claude, Copilot, etc.)
+- **AI-powered editors** (Cursor, Windsurf, etc.)
+- **Any libraries or frameworks**
 
-## Objective
-
-Create a working RAG pipeline that:
-1. Ingests the provided product documentation
-2. Retrieves relevant context for user queries
-3. Generates accurate, grounded responses using an LLM
-4. Optimizes for accuracy, latency, and token efficiency
+**However:** Since AI tools are allowed, we expect HIGHER quality. We evaluate not just that your pipeline works, but that you UNDERSTAND it. Generic, copy-pasted solutions will score poorly.
 
 ---
 
-## Provided Resources
+## What You'll Build
 
-- `data/BrewGenius_Product_Guide.md` - Complete product knowledge base (your source document)
+A RAG pipeline that answers questions about BrewGenius coffee/espresso machine products using the provided product knowledge base.
 
-**That's it.** You are responsible for all architecture decisions, tool selection, and implementation.
+**Provided:**
+- `data/BrewGenius_Product_Guide.md` - The product knowledge base
+
+**That's it.** You decide everything else: chunking, embeddings, vector store, LLM, prompts.
 
 ---
 
 ## Requirements
 
-### Functional Requirements
-
-Your pipeline must:
+### Your Pipeline Must:
 
 1. **Ingest** the product guide and prepare it for retrieval
-2. **Retrieve** relevant document chunks based on user queries
-3. **Generate** answers using an LLM with retrieved context
-4. **Handle** various question types:
-   - Product specifications (e.g., "What is the water tank capacity of ProBarista Elite?")
-   - Comparisons (e.g., "Compare ProBarista Elite vs Studio")
-   - Recommendations (e.g., "Which machine is best for a small apartment?")
-   - Troubleshooting (e.g., "My espresso is bitter, what should I do?")
-   - Pricing and availability (e.g., "What's the cheapest espresso machine?")
-   - General knowledge (e.g., "What grind size should I use for pour over?")
+2. **Retrieve** relevant chunks based on user queries
+3. **Generate** accurate, grounded answers using an LLM
 
-### Non-Functional Requirements
+### Query Types to Handle:
 
-Optimize for:
+| Type | Example | Challenge |
+|------|---------|-----------|
+| Specifications | "What is the water tank capacity of ProBarista Elite?" | Direct lookup |
+| Comparisons | "Compare ProBarista Elite vs Studio" | Multi-item synthesis |
+| Recommendations | "Which machine is best for a small apartment?" | Understanding user needs |
+| Troubleshooting | "My espresso is bitter, what should I do?" | Problem-solution matching |
+| Pricing | "What's the cheapest espresso machine?" | Filtering + sorting |
+| Calculations | "If I make 4 lattes/day, how long does the water tank last?" | Reasoning + math |
+| Edge Cases | "What's the Bluetooth range?" | Handling missing info gracefully |
 
-**Accuracy**
-- **Target:** Answers must be factually correct based on source document
-- **Why It Matters:** User trust
+---
 
-**Latency**
-- **Target:** Response time should be reasonable for interactive use
-- **Why It Matters:** User experience
+## What to Submit
 
-**Token Efficiency**
-- **Target:** Minimize tokens sent to LLM while maintaining accuracy
-- **Why It Matters:** Cost reduction
+### 1. Source Code
+- Complete, runnable pipeline
+- **Must work on first try** - test it yourself before submitting
+- Clear entry point (how to run it)
+
+### 2. Architecture Document (1-2 pages)
+
+Explain your choices with **specific justification**:
+
+| Decision | What We Want to See |
+|----------|---------------------|
+| Chunking strategy | WHY you chose your chunk size, not just "512 is standard" |
+| Embedding model | Trade-offs you considered, why THIS model for THIS task |
+| Vector store | Why it fits this use case (~100 chunks, single document) |
+| Retrieval approach | How you chose k, how you handle low-confidence results |
+| Prompt design | How you prevent hallucination, handle different query types |
+
+**Generic explanations will score poorly.** Reference the BrewGenius document specifically.
+
+### 3. Performance Report
+
+Include actual measured data:
+- Average response latency (measured, not estimated)
+- Average tokens per query (measured)
+- Test results on at least 5 different query types
 
 ---
 
 ## Evaluation Criteria
 
-Your submission will be evaluated on:
+| Category | Weight | What We're Looking For |
+|----------|--------|------------------------|
+| Query Accuracy | 40% | Correct answers on standard AND edge-case queries |
+| Architecture Design | 25% | Justified decisions, not generic explanations |
+| Implementation Quality | 20% | Code quality, error handling, documentation |
+| Optimization | 15% | Working optimizations with measured impact |
 
-### 1. Architecture Design (25%)
-- Document chunking strategy and rationale
-- Embedding model selection and justification
-- Vector store choice
-- Retrieval mechanism design
-- Prompt engineering approach
+### We Will Test:
 
-### 2. Implementation Quality (25%)
-- Code organization and clarity
-- Error handling
-- Configurability
-- Documentation
+1. **Standard queries** - Can it answer basic product questions?
+2. **Adversarial queries** - Does your pipeline:
+   - Admit when it doesn't have information?
+   - Avoid hallucinating details not in the document?
+   - Handle edge cases gracefully?
+   - Reason through calculations?
+   - Recognize impossible requests?
 
-### 3. Performance Metrics (30%)
-- Answer accuracy on test queries
-- Retrieval relevance (are the right chunks being retrieved?)
-- Response latency
-- Token usage per query
+3. **Code verification** - We will:
+   - Run your code following your README
+   - Test edge cases (empty query, invalid input)
+   - Verify claimed optimizations actually exist
+   - Check that documentation matches implementation
 
-### 4. Optimization Techniques (20%)
-- Techniques used to improve accuracy
-- Techniques used to reduce latency
-- Techniques used to minimize token consumption
-- Trade-off analysis and decisions
+### Red Flags That Lower Scores:
 
----
-
-## Test Queries
-
-Your pipeline will be tested against queries including (but not limited to):
-
-```
-1. "What is the price of the ProBarista Elite?"
-2. "Which coffee maker has a built-in grinder?"
-3. "How do I fix weak espresso?"
-4. "Compare the SmartBrew Pro 12 and SmartBrew Pro 8"
-5. "What's the warranty on the grinder burrs?"
-6. "I have a small kitchen - which machine do you recommend?"
-7. "What grind setting should I use for French Press on the GrindMaster Pro?"
-8. "Does the ProBarista Compact have a dual boiler?"
-9. "What water hardness is recommended?"
-10. "How often should I descale my machine?"
-```
-
----
-
-## Deliverables
-
-Submit the following:
-
-### 1. Source Code
-- Complete, runnable pipeline code
-- Setup instructions (dependencies, API keys, etc.)
-- Example usage script
-
-### 2. Architecture Document
-A brief document (1-2 pages) explaining:
-- Your architecture choices and why
-- Chunking strategy
-- Embedding model selected and why
-- Retrieval approach (k value, reranking, etc.)
-- Prompt design
-- Any optimization techniques applied
-
-### 3. Performance Report
-Include metrics for:
-- Average response latency
-- Average tokens per query (input + output)
-- Accuracy on test queries (self-evaluated)
-- Retrieval quality observations
+- Pipeline never says "I don't know" (hallucination risk)
+- Documentation describes features not in code
+- Generic explanations that could apply to any RAG project
+- Inconsistent coding styles (suggests copy-paste)
+- Over-engineered for the task (~100 chunks, not production scale)
+- Claims "tested X" but no evidence provided
+- Code doesn't run following your instructions
 
 ---
 
 ## Constraints
 
-- **No access to this codebase** - Build everything from scratch
-- **LLM of your choice** - OpenAI, Anthropic, local models, etc.
-- **Any programming language** - Python recommended but not required
-- **Any libraries/frameworks** - LangChain, LlamaIndex, custom implementation, etc.
-- **Internet access allowed** - Research best practices, techniques, documentation
+- **LLM:** Your choice (OpenAI, Anthropic, local models, etc.)
+- **Language:** Any (Python recommended)
+- **Libraries:** Any (LangChain, LlamaIndex, custom, etc.)
+- **Time:** 90 minutes
 
 ---
 
-## Getting Started (Suggested)
+## Submission Format
 
-This is just a suggestion - you may approach this differently:
+Create a ZIP file containing:
+```
+YourName_RAG/
+├── README.md              # Setup + usage instructions (must be accurate!)
+├── requirements.txt       # Dependencies with versions
+├── src/                   # Your source code
+├── architecture.md        # Architecture document with understanding questions
+├── performance.md         # Performance report with real measured data
+└── data/
+    └── BrewGenius_Product_Guide.md
+```
 
-1. **Research Phase**
-   - Study RAG architectures and best practices
-   - Understand chunking strategies
-   - Learn about embedding models and vector stores
-
-2. **Design Phase**
-   - Plan your architecture
-   - Make technology choices
-   - Design your prompts
-
-3. **Implementation Phase**
-   - Build the ingestion pipeline
-   - Implement retrieval mechanism
-   - Integrate LLM generation
-   - Add optimizations
-
-4. **Evaluation Phase**
-   - Test with provided queries
-   - Measure performance metrics
-   - Iterate and improve
+**Name your ZIP file:** `YourName_RAG.zip` (e.g., `John_Doe_RAG.zip`)
 
 ---
 
-## Submission
+## Tips for Success
 
-Submit your completed work including:
-- [ ] Source code (GitHub repo or zip file)
-- [ ] Architecture document (PDF or Markdown)
-- [ ] Performance report (PDF or Markdown)
-- [ ] Working demo or video walkthrough
+### Do:
+- **Start simple** - Get basic RAG working first, then optimize
+- **Measure everything** - Real numbers, not estimates
+- **Document your reasoning** - WHY you made each choice
+- **Test edge cases** - Empty queries, nonsense input, missing info questions
+- **Be honest about limitations** - "This doesn't handle X well because..."
+
+### Don't:
+- **Over-engineer** - This is ~100 chunks, not a production system
+- **Copy generic tutorials** - Adapt for BrewGenius specifically
+- **Claim what you can't prove** - "I tested X" requires evidence
+- **Ignore edge cases** - We will test them
+- **Let your pipeline hallucinate** - Better to say "I don't know"
 
 ---
 
-*Good luck! Focus on understanding the fundamentals - the best solutions come from deep understanding, not just copying code.*
+## What Makes a Great Submission
+
+1. **Runs perfectly on first try** following your README
+2. **Architecture choices are justified** with specific reasoning for THIS task
+3. **Handles edge cases** gracefully (admits uncertainty, doesn't hallucinate)
+4. **Code is clean and consistent** (not patchwork from multiple sources)
+5. **Documentation is accurate** and matches the actual implementation
+6. **Performance is measured** with real data, not estimates
+7. **Shows understanding** - can explain WHY, not just WHAT
+
+---
+
+**Good luck!** Show us that you understand RAG, not just that you can prompt an AI to generate code.
